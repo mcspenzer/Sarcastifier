@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="assets/css/Semantic-UI-CSS-master/semantic.css"
+        />
+        <script src="assets/js/jquery-3.4.1.min.js"></script>
+        <script src="assets/css/Semantic-UI-CSS-master/semantic.js"></script>
+    </head>
+    <body>
+        <div class="ui container" style="margin-top: 3em">
+            <div class="ui grid">
+                <h1 class="ui header" style="font-size: 3em">
+                    Sarcastic Text Converter
+                </h1>
+                <div class="two column row">
+                    <div class="column">
+                        <div class="ui segment">
+                            <div class="ui form">
+                                <div class="field">
+                                    <label
+                                        ><h3 class="ui header">
+                                            Enter text to convert
+                                        </h3></label
+                                    >
+                                    <textarea
+                                        name="textarea"
+                                        id="textToConvert"
+                                        rows="2"
+                                        style="height: 30em;"
+                                        oninput="sarcastify()"
+                                    ></textarea>
+                                    <div
+                                        class="ui label"
+                                        style="margin-top: 1em"
+                                    >
+                                        Characters
+                                        <div class="detail" id="charNum">0</div>
+                                    </div>
+
+                                    <div
+                                        class="ui slider checkbox right"
+                                        style="display: flex; justify-content: flex-end; margin-top: -1.2em"
+                                    >
+                                        <input
+                                            id="randomized"
+                                            type="checkbox"
+                                            tabindex="0"
+                                            class="hidden"
+                                        />
+                                        <label>Randomize</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column sarcastify" id="sarcastifyColumn">
+                        <div class="ui segment sarcastify">
+                            <div class="floating ui green label">
+                                <a href="#" onclick="copyText()"
+                                    ><i class="copy icon"></i
+                                ></a>
+                            </div>
+                            <div class="ui form">
+                                <div class="field">
+                                    <label
+                                        ><h3 class="ui header">
+                                            Sarcastic text result
+                                        </h3></label
+                                    >
+                                    <textarea
+                                        name="textarea"
+                                        id="sarcasticText"
+                                        rows="2"
+                                        style="height: 30em;"
+                                        readonly
+                                    ></textarea>
+
+                                    <div
+                                        class="ui label"
+                                        style="margin-top: 1em; visibility: hidden"
+                                    >
+                                        Characters
+                                        <div class="detail">
+                                            0
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                    <div class="column" style="margin: auto">
+                        <div
+                            id="hiddenToast"
+                            class="ui positive compact message"
+                            style="margin-top: 2em; visibility: hidden"
+                        >
+                            <p>
+                                <i class="clipboard outline"></i>
+                                Text copied to clipboard
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        $(".ui.slider.checkbox").checkbox({
+            onChecked: () => {
+                recalcText();
+            },
+            onUnchecked: () => {
+                recalcText();
+            }
+        });
+    </script>
+
+    <script>
+        function sarcastify() {
+            console.log("sarcastify");
+
+            var textToConvert = $("#textToConvert").val();
+            var numberOfCharacters = textToConvert.length;
+
+            $("#charNum").html(numberOfCharacters);
+
+            var strSplit = textToConvert.split("");
+
+            var isRandom = $(".ui.slider.checkbox").checkbox("is checked");
+
+            for (var i = 0; i < strSplit.length; i++) {
+                if (isRandom == 1) {
+                    if (Math.random() >= 0.5) {
+                        strSplit[i] = strSplit[i].toUpperCase();
+                    }
+                } else if (i % 2 == 0) strSplit[i] = strSplit[i].toUpperCase();
+            }
+
+            $("#sarcasticText").val(strSplit.join(""));
+        }
+
+        function copyText() {
+            $("#sarcastifyColumn").transition({
+                duration: "0.5s",
+                animation: "pulse",
+                onComplete: () => {
+                    var temp = document.createElement("input");
+                    temp.setAttribute("value", $(sarcasticText).val());
+                    document.body.appendChild(temp);
+                    temp.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(temp);
+
+                    console.log("copied text");
+
+                    $("#hiddenToast").transition({
+                        duration: "1s",
+                        animation: "fade"
+                    });
+
+                    $("#hiddenToast").transition({
+                        duration: "2s",
+                        animation: "fade"
+                    });
+                }
+            });
+        }
+
+        function recalcText() {
+            console.log("recalc text");
+            var textToConvert = $("#textToConvert").val();
+            var strSplit = textToConvert.split("");
+            var isRandom = $(".ui.slider.checkbox").checkbox("is checked");
+
+            for (var i = 0; i < strSplit.length; i++) {
+                if (isRandom == 1) {
+                    if (Math.random() >= 0.5) {
+                        strSplit[i] = strSplit[i].toUpperCase();
+                    }
+                } else if (i % 2 == 0) strSplit[i] = strSplit[i].toUpperCase();
+            }
+
+            $("#sarcasticText").val(strSplit.join(""));
+        }
+    </script>
+</html>
